@@ -21,3 +21,9 @@ const char Menu[] = "**** NOCION DE TIEMPO ****\r\n\n"
                     "En este modo de juego, tienes que ser un reloj suizo.\r\n"
                     "Concentracion total.\r\n\n"
                     "~~ SOLO EL MAS PRECISO GANARA ~~\r\n\n";
+
+// Modo 4
+const char Menu[] = "**** ENTRENAMIENTO ****\r\n\n" 
+                    "Bienvenido al GYM de la reaccion.\r\n"
+                    "Aqui podras mejorar tu tiempo de reaccion visual.\r\n\n"
+                    "¿¿TENDRAS MEJORES REFLEJOS QUE EL MISMISIMO FERNANDO ALONSO??\r\n\n";
