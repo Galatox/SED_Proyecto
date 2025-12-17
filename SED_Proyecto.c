@@ -79,8 +79,8 @@ void SED_RESET_A(void){
 void SED_Numero_A(uint8_t numero){
 	/*
 	 * @brief: Imprime el numero introducido en el decodificador A
+	 * @param numero: Numero introducido en el decodificador A
 	 */
-
 	switch (numero){
 	case 0:
 		SED_RESET_A();
@@ -211,6 +211,7 @@ void SED_RESET_B(void){
 void SED_Numero_B(uint8_t numero){
 	/*
 	 * @brief: Imprime el numero introducido en el decodificador B
+	 * @param numero: Numero introducido en el decodificador B
 	 */
 	switch (numero){
 	case 0:
@@ -281,7 +282,6 @@ void SED_SET_LED_ROJO(void){
 	/*
 	 * @brief: Setea el LED ROJO
 	 */
-
 	HAL_GPIO_WritePin(GPIOA, SED_LED_ROJO, GPIO_PIN_SET);
 	return;
 }
@@ -290,7 +290,6 @@ void SED_SET_LED_AZUL(void){
 	/*
 	 * @brief: Setea el LED AZUL
 	 */
-
 	HAL_GPIO_WritePin(GPIOA, SED_LED_AZUL, GPIO_PIN_SET);
 	return;
 }
@@ -299,7 +298,6 @@ void SED_SET_LED_VERDE(void){
 	/*
 	 * @brief: Setea el LED VERDE
 	 */
-
 	HAL_GPIO_WritePin(GPIOA, SED_LED_VERDE, GPIO_PIN_SET);
 	return;
 }
@@ -308,7 +306,6 @@ void SED_RESET_LED_ROJO(void){
 	/*
 	 * @brief: Resetea el LED ROJO
 	 */
-
 	HAL_GPIO_WritePin(GPIOA, SED_LED_ROJO, GPIO_PIN_RESET);
 	return;
 }
@@ -317,7 +314,6 @@ void SED_RESET_LED_AZUL(void){
 	/*
 	 * @brief: Resetea el LED AZUL
 	 */
-
 	HAL_GPIO_WritePin(GPIOA, SED_LED_AZUL, GPIO_PIN_RESET);
 	return;
 }
@@ -326,7 +322,6 @@ void SED_RESET_LED_VERDE(void){
 	/*
 	 * @brief: Resetea el LED VERDE
 	 */
-
 	HAL_GPIO_WritePin(GPIOA, SED_LED_VERDE, GPIO_PIN_RESET);
 	return;
 }
@@ -339,7 +334,9 @@ void SED_RESET_LED_VERDE(void){
  ************************************************************************************************/
 
 void SED_USART_Interface(void){
-	//@brief: imprime el menu del juego
+	/*
+	 * @brief: Imprime el menu del juego
+	 */
 	extern UART_HandleTypeDef huart2;
 
 	const char Menu[] = "Bienvenidos al juego de reaccion!\r\n\n"
@@ -354,10 +351,10 @@ void SED_USART_Interface(void){
 }
 
 int SED_USART_Modos(char uartBuffer[]){
-
-	//@brief: hace la busqueda del modo que se introdujo USART.
-	//@param uartBuffer: tiene el contenido que se mandó por la USART.
-
+	/*
+	 * @brief: Hace la busqueda del modo que se introdujo USART.
+	 * @param uartBuffer: Tiene el contenido que se mandó por la USART.
+	 */
 	extern int modo;
 	extern UART_HandleTypeDef huart2;
 
@@ -406,8 +403,9 @@ int SED_USART_Modos(char uartBuffer[]){
 }
 
 void SED_USART_Inicio_Juego(void){
-	//@brief: interface del comienzo del juego
-
+	/*
+	 * @brief: Interfaz del comienzo del juego
+	 */
 	extern UART_HandleTypeDef huart2;
 	char Inicio[24] = "Inicio del juego en:\r\n ";
 
@@ -425,4 +423,5 @@ void SED_USART_Inicio_Juego(void){
 	sprintf(Inicio,"GO");
 	HAL_UART_Transmit(&huart2, (uint8_t*) Inicio, strlen(Inicio), 20);
 }
+
 
