@@ -78,7 +78,8 @@ void SED_RESET_A(void){
 
 void SED_Numero_A(uint8_t numero){
 	/*
-	 * @brief: Imprime el numero introducido en el decodificador A
+	 * @brief: Configura el numero binario que se quiere introducir en el decodificador A
+	 * @param numero: Numero a introducir
 	 */
 
 	switch (numero){
@@ -210,7 +211,8 @@ void SED_RESET_B(void){
 
 void SED_Numero_B(uint8_t numero){
 	/*
-	 * @brief: Imprime el numero introducido en el decodificador B
+	 * @brief: Configura el numero binario que se quiere introducir en el decodificador B
+	 * @param numero: Numero a introducir
 	 */
 	switch (numero){
 	case 0:
@@ -356,7 +358,10 @@ void SED_RESET_BUZZER(void){
  ************************************************************************************************/
 
 void SED_Temporización(uint16_t tiempo){
-	//Tu = 0.1 ms
+	/*
+	 * @brief: Configuracion timer4 Tu = 0.1 ms
+	 * @param tiempo: Numero de cuentas
+	 */
 	TIM4->ARR = tiempo;
 	TIM4->CR1 |= (1<<0);
 	while((TIM4->SR & (1<<0)) == 0);
@@ -370,6 +375,9 @@ void SED_Temporización(uint16_t tiempo){
  ************************************************************************************************/
 
 uint32_t SED_ADC_Semilla(void){
+	/*
+	 * @brief: Cambia la semilla de numeros randoms
+	 */
 	extern ADC_HandleTypeDef hadc1;
 
 	uint32_t valor = 0;
@@ -391,8 +399,9 @@ uint32_t SED_ADC_Semilla(void){
 
 void SED_LCD_Bienvenido(void)
 {
-
-
+	/*
+	 * @brief: Da la bienvenida al usuario
+	 */
 	lcd_init ();
 	lcd_send_string("***BIENVENIDO***");
 	lcd_put_cur(1, 0);
@@ -411,6 +420,10 @@ void SED_LCD_Bienvenido(void)
 }
 
 void SED_LCD_Winner(hjugadores jugadores){
+	/*
+	 * @brief: Muestra por pantalla el ganador
+	 * @param hjugadores jugadores: Datos de los resultados de la partida
+	 */
 	char stringLCD[16];
 	lcd_init ();
 
@@ -434,7 +447,9 @@ void SED_LCD_Winner(hjugadores jugadores){
  ************************************************************************************************/
 
 void SED_USART_Interface(void){
-	//@brief: imprime el menu del juego
+	/*
+	 * @brief: Imprime el menu del juego
+	 */
 	extern UART_HandleTypeDef huart2;
 
 	const char Menu[] = "Bienvenidos al juego de reaccion!\r\n\n"
@@ -450,8 +465,10 @@ void SED_USART_Interface(void){
 
 int SED_USART_Modos(char uartBuffer[]){
 
-	//@brief: hace la busqueda del modo que se introdujo USART.
-	//@param uartBuffer: tiene el contenido que se mandó por la USART.
+	/*
+	 * @brief: Hace la busqueda del modo que se introdujo USART
+	 * @param uartBuffer: Tiene el contenido que se mandó por la USART
+	 */
 
 	extern hjuego hj;
 	extern UART_HandleTypeDef huart2;
@@ -512,8 +529,9 @@ int SED_USART_Modos(char uartBuffer[]){
 }
 
 void SED_USART_Inicio_Juego(void){
-	//@brief: interface del comienzo del juego
-
+	/*
+	 * @brief: Interfaz del comienzo del juego
+	 */
 	extern UART_HandleTypeDef huart2;
 	char Inicio[24] = "Inicio del juego en:\r\n ";
 
@@ -531,7 +549,9 @@ void SED_USART_Inicio_Juego(void){
 
 
 void SED_USART_Eleccion_Rondas(void){
-	//@brief: pregunta al usuario cuantas rondas quiere jugar
+	/*
+	 * @brief: Pregunta al usuario cuantas rondas quiere jugar
+	 */
 	extern UART_HandleTypeDef huart2;
 
 	const char Rondas[] = "Elige el numero de rondas: \r\n\n"
@@ -544,7 +564,10 @@ void SED_USART_Eleccion_Rondas(void){
 }
 
 uint8_t SED_USART_Numero_Rondas(char uartBuffer[]){
-	//@brief: Hace el control de los valores que entran en la uart
+	/*
+	 * @brief: Hace el control de los valores que entran en la UART
+	 * @param: Tiene el contenido que se mandó por la UART
+	 */ 
 	extern UART_HandleTypeDef huart2;
 
 	uint8_t ref = atoi(uartBuffer);
@@ -555,8 +578,12 @@ uint8_t SED_USART_Numero_Rondas(char uartBuffer[]){
 
 	return refVerificada;
 }
+
 void SED_USART_Rondas_Elegidas(uint8_t rondasElegidas){
-	//@brief: pregunta al usuario cuantas rondas quiere jugar
+	/*
+	 * @brief: Pregunta al usuario cuantas rondas quiere jugar
+	 * @param: Guarda el valor del numero de rondas elegidas
+	 */
 	extern UART_HandleTypeDef huart2;
 
 	char Rondas[32]="";
@@ -564,8 +591,11 @@ void SED_USART_Rondas_Elegidas(uint8_t rondasElegidas){
 
 	HAL_UART_Transmit(&huart2, (uint8_t*) Rondas, strlen(Rondas), 20);
 }
+
 void SED_USART_Error_Rondas(void){
-	//@brief: error al introducir el numero de rondas
+	/*
+	 * @brief: Error al introducir el numero de rondas
+	 */
 	extern UART_HandleTypeDef huart2;
 
 	char error[] = "Introduzca una valor de rondas validos (1 / 3 / 5 / 7).\r\n";
@@ -574,7 +604,9 @@ void SED_USART_Error_Rondas(void){
 }
 
 void SED_USART_Puestos(void){
-	//@brief indica al usuario como posicionarse para jugar
+	/*
+	 * @brief: Indica a los usuarios como posicionarse para jugar
+	 */
 	extern UART_HandleTypeDef huart2;
 
 	const char Puestos[] = "- Jugador 1, dirijase al puesto azul.\r\n\n"
@@ -584,16 +616,21 @@ void SED_USART_Puestos(void){
 }
 
 void SED_USART_Puestos_Modo_4(void){
-	//@brief indica al usuario como posicionarse para jugar
+	/*
+	 * @brief: Indica al usuario como posicionarse para jugar
+	 */
 	extern UART_HandleTypeDef huart2;
 
 	const char Puestos[] = "- Jugador , dirijase al puesto azul.\r\n\n";
 	HAL_UART_Transmit(&huart2, (uint8_t*) Puestos, strlen(Puestos), 20);
 
 }
-hjuego SED_USART_SwitchMenu(hjuego hj){
 
-	//@brief eleccion del modo de juego;
+hjuego SED_USART_SwitchMenu(hjuego hj){
+	/* 
+	 * @brief: Eleccion del modo de juego
+	 * @param hjuego hj: Datos de la seleccion de partida
+	 */
 	hjugadores jugadores = {2,0.0,0.0,0,0}; //ganador, tiempo1,tiempo 2,puntosJ1,puntosJ2
 
 	SED_RESET_A();
@@ -649,15 +686,15 @@ hjuego SED_USART_SwitchMenu(hjuego hj){
  ************************************************************************************************/
 
 hjugadores SED_Modo_1(uint8_t rondas,hjugadores jugadores){
-	//@brief: Se enciende la luz de forma aleatorio.
-
-
+	/*
+	 * @brief: Configuracion modo Estimulo Visual
+	 * @param rondas: Numero de rondas
+	 * @param h jugadores jugadores: Datos de los resultados de la partida
+	 */
 	uint32_t semilla = SED_ADC_Semilla();
 	srand(semilla);
 	uint32_t tiempoperdedor = 0;
 	uint32_t tiempoganador = 0;
-
-
 
 	for(int i = 0; i<rondas ;i++){
 		jugadores.ganador = 0;
@@ -736,15 +773,16 @@ hjugadores SED_Modo_1(uint8_t rondas,hjugadores jugadores){
 	return jugadores;
 }
 
-
-
 hjugadores SED_Modo_2(uint8_t rondas,hjugadores jugadores){
+	/*
+	 * @brief: Configuracion modo Estimulo Auditivo
+	 * @param rondas: Numero de rondas
+	 * @param h jugadores jugadores: Datos de los resultados de la partida
+	 */
 	uint32_t semilla = SED_ADC_Semilla();
 	srand(semilla);
 	uint32_t tiempoperdedor = 0;
 	uint32_t tiempoganador = 0;
-
-
 
 	for(int i = 0; i<rondas ;i++){
 		jugadores.ganador = 0;
@@ -804,7 +842,6 @@ hjugadores SED_Modo_2(uint8_t rondas,hjugadores jugadores){
 			SED_SET_LED_VERDE();
 		}
 
-
 		HAL_Delay(1000);
 
 		//Imprime el resultado
@@ -823,11 +860,12 @@ hjugadores SED_Modo_2(uint8_t rondas,hjugadores jugadores){
 	return jugadores;
 }
 
-
-
-
-
 hjugadores SED_Modo_3(uint8_t rondas,hjugadores jugadores){
+	/*
+	 * @brief: Configuracion modo Nocion del Tiempo
+	 * @param rondas: Numero de rondas
+	 * @param h jugadores jugadores: Datos de los resultados de la partida
+	 */
 	uint32_t semilla = SED_ADC_Semilla();
 	srand(semilla);
 
@@ -909,11 +947,12 @@ hjugadores SED_Modo_3(uint8_t rondas,hjugadores jugadores){
 	return jugadores;
 }
 
-
-
-
-
 hjugadores SED_Modo_4(uint8_t rondas,hjugadores jugadores){
+	/*
+	 * @brief: Configuracion modo Entrenamiento
+	 * @param rondas: Numero de rondas
+	 * @param h jugadores jugadores: Datos de los resultados de la partida
+	 */
 	uint32_t semilla = SED_ADC_Semilla();
 	srand(semilla);
 	uint32_t tiempoganador = 0;
@@ -978,5 +1017,6 @@ hjugadores SED_Modo_4(uint8_t rondas,hjugadores jugadores){
 	}
 	return jugadores;
 }
+
 
 
