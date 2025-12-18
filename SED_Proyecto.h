@@ -12,6 +12,7 @@
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
+#include "i2c-lcd.h"
 
 
 /************************************************************************************************
@@ -138,6 +139,7 @@ void SED_Temporización(uint16_t tiempo);
 
 uint32_t SED_ADC_Semilla(void);
 
+
 /************************************************************************************************
  * 																								*
  *										USART													*
@@ -207,9 +209,17 @@ hjuego SED_USART_SwitchMenu(hjuego hj);
  * 										FUNCIONES												*
  *																								*
  ************************************************************************************************/
-void SED_Modo_1(uint8_t rondas,hjugadores jugadores);
-void SED_Modo_2(uint8_t rondas,hjugadores jugadores);
-void SED_Modo_3(uint8_t rondas,hjugadores jugadores);
-void SED_Modo_4(uint8_t rondas,hjugadores jugadores);
+hjugadores SED_Modo_1(uint8_t rondas,hjugadores jugadores);
+hjugadores SED_Modo_2(uint8_t rondas,hjugadores jugadores);
+hjugadores SED_Modo_3(uint8_t rondas,hjugadores jugadores);
+hjugadores SED_Modo_4(uint8_t rondas,hjugadores jugadores);
+
+/************************************************************************************************
+ * 																								*
+ *										I2C														*
+ *																								*
+ ************************************************************************************************/
+void  SED_LCD_Bienvenido(void);
+void SED_LCD_Winner(hjugadores jugadores);
 
 #endif /* INC_SED_PROYECTO_H_ */
