@@ -11,6 +11,7 @@
 #include "stm32f4xx_hal.h"
 #include "string.h"
 #include "stdio.h"
+#include "stdlib.h"
 
 
 /************************************************************************************************
@@ -73,6 +74,10 @@
 /*GPIOC*/
 #define SED_LISTO GPIO_PIN_8
 
+/*BUZZER*/
+
+/*GPIOB*/
+#define SED_BUZZER GPIO_PIN_6
 /************************************************************************************************
  * 																								*
  * 										FUNCIONES												*							*
@@ -112,6 +117,27 @@ void SED_RESET_LED_ROJO(void);
 void SED_RESET_LED_AZUL(void);
 void SED_RESET_LED_VERDE(void);
 
+/*BUZZER*/
+
+void SED_SET_BUZZER(void);
+void SED_RESET_BUZZER(void);
+
+/************************************************************************************************
+ * 																								*
+ *											TIMER												*
+ *																								*
+ ************************************************************************************************/
+
+void SED_Temporización(uint16_t tiempo);
+
+/************************************************************************************************
+ * 																								*
+ *											ADC													*
+ *																								*
+ ************************************************************************************************/
+
+uint32_t SED_ADC_Semilla(void);
+
 /************************************************************************************************
  * 																								*
  *										USART													*
@@ -131,6 +157,20 @@ void SED_RESET_LED_VERDE(void);
 #define SED_MODO_3 3
 #define SED_MODO_4 4
 
+typedef struct{
+	int8_t modo;
+	uint8_t rondasElegidas;
+	int print;
+
+} hjuego;
+
+typedef struct{
+	int8_t ganador;
+	float tiempoJ1;
+	float tiempoJ2;
+	uint8_t puntosJ1;
+	uint8_t puntosJ2;
+} hjugadores;
 /************************************************************************************************
  * 																								*
  * 										FUNCIONES												*
@@ -139,4 +179,37 @@ void SED_RESET_LED_VERDE(void);
 void SED_USART_Interface(void);
 int SED_USART_Modos(char uartBuffer[]);
 void SED_USART_Inicio_Juego(void);
+void SED_USART_Eleccion_Rondas(void);
+void SED_USART_Rondas_Elegidas(uint8_t rondasElegidas);
+void SED_USART_Error_Rondas(void);
+uint8_t SED_USART_Numero_Rondas(char uartBuffer[]);
+void SED_USART_Puestos(void);
+hjuego SED_USART_SwitchMenu(hjuego hj);
+
+/************************************************************************************************
+ * 																								*
+ *										FUNCIONES LOGICAS										*
+ *																								*
+ ************************************************************************************************/
+/************************************************************************************************
+ * 																								*
+ * 										VARIABLES												*
+ *																								*
+ ************************************************************************************************/
+
+
+
+#define SED_CCR_MAX 49999
+#define SED_CCR_MIN 4999
+
+/************************************************************************************************
+ * 																								*
+ * 										FUNCIONES												*
+ *																								*
+ ************************************************************************************************/
+void SED_Modo_1(uint8_t rondas,hjugadores jugadores);
+void SED_Modo_2(uint8_t rondas,hjugadores jugadores);
+void SED_Modo_3(uint8_t rondas,hjugadores jugadores);
+void SED_Modo_4(uint8_t rondas,hjugadores jugadores);
+
 #endif /* INC_SED_PROYECTO_H_ */
