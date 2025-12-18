@@ -46,6 +46,7 @@ I2C_HandleTypeDef hi2c1;
 
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim5;
 
 UART_HandleTypeDef huart2;
@@ -70,6 +71,7 @@ static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM5_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -114,12 +116,15 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM5_Init();
   MX_ADC1_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart2, (uint8_t*) buffer, 1);
   SED_USART_Interface();
+  SED_LCD_Bienvenido();
 
-  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
-  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_1);
+  HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_2);
+  HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_1);
+
 
   /* USER CODE END 2 */
 
@@ -131,8 +136,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if(hj.modo == SED_POR_DEFECTO){
+		  SED_LCD_Bienvenido();
+	  }
 	  if(hj.print){
 		  hj=SED_USART_SwitchMenu(hj);
+
 		  HAL_Delay(1000);
 	  }
 
@@ -320,7 +329,7 @@ static void MX_TIM2_Init(void)
   sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
   sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
   sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
-  sConfigIC.ICFilter = 0;
+  sConfigIC.ICFilter = 10;
   if (HAL_TIM_IC_ConfigChannel(&htim2, &sConfigIC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
@@ -394,6 +403,51 @@ static void MX_TIM3_Init(void)
 }
 
 /**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 0;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 9999;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
   * @brief TIM5 Initialization Function
   * @param None
   * @retval None
@@ -413,8 +467,8 @@ static void MX_TIM5_Init(void)
   /* USER CODE END TIM5_Init 1 */
   htim5.Instance = TIM5;
   htim5.Init.Prescaler = 8399;
-  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim5.Init.Period = 9999;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_DOWN;
+  htim5.Init.Period = 89999;
   htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
@@ -489,7 +543,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1|B0_Pin|A3_Pin|A2_Pin
+  HAL_GPIO_WritePin(GPIOB, A0_Pin|B0_Pin|A3_Pin|A2_Pin
                           |A1_Pin|BUZZER_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -498,9 +552,9 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, B3_Pin|B2_Pin|B1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PB1 B0_Pin A3_Pin A2_Pin
+  /*Configure GPIO pins : A0_Pin B0_Pin A3_Pin A2_Pin
                            A1_Pin BUZZER_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_1|B0_Pin|A3_Pin|A2_Pin
+  GPIO_InitStruct.Pin = A0_Pin|B0_Pin|A3_Pin|A2_Pin
                           |A1_Pin|BUZZER_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -537,11 +591,13 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
  	if(huart->Instance == USART2){
  		static int uartIndice = 0;
 
-
+ 		static int x = 0;
  		int y = 0;
  		int z = 0;
  		if((!strcmp(buffer,"\r")) || (!strcmp(buffer,"\n"))){
@@ -551,6 +607,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
  				y = SED_USART_Modos(uartBuffer);
  				if(y){
  					SED_USART_Eleccion_Rondas();
+ 					x = 1;
  					memset(uartBuffer,0,strlen(uartBuffer));
  					memset(buffer,0,1);
  					HAL_UART_Receive_IT(&huart2, (uint8_t*)buffer, sizeof(buffer));
@@ -558,15 +615,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
  				}
 
  				z = SED_USART_Numero_Rondas(uartBuffer);
- 				if(z != 0){
+ 				if((z != 0) && (x == 1)){
  					hj.rondasElegidas = z;
  					SED_USART_Rondas_Elegidas(hj.rondasElegidas);
  					hj.print = 1;
   				}
- 				else if(z == 0){
+ 				else if((z == 0) && (x == 1)){
  					SED_USART_Error_Rondas();
+ 					return;
  				}
-
+ 				x = 0;
  				memset(uartBuffer,0,strlen(uartBuffer));
  				memset(buffer,0,1);
  				HAL_UART_Receive_IT(&huart2, (uint8_t*)buffer, sizeof(buffer));
