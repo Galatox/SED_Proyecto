@@ -200,7 +200,7 @@ hjuego SED_USART_SwitchMenu(hjuego hj);
 
 
 #define SED_CCR_MAX 49999
-#define SED_CCR_MIN 4999
+#define SED_CCR_MIN 9999
 
 /************************************************************************************************
  * 																								*
