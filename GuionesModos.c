@@ -27,3 +27,11 @@ const char Menu[] = "**** ENTRENAMIENTO ****\r\n\n"
                     "Bienvenido al GYM de la reaccion.\r\n"
                     "Aqui podras mejorar tu tiempo de reaccion visual.\r\n\n"
                     "¿¿TENDRAS MEJORES REFLEJOS QUE EL MISMISIMO FERNANDO ALONSO??\r\n\n";
+
+// Ganadores
+const char Menu[] = "**** GANADORES ****\r\n\n" 
+                    "El ganador es: Jugador %d\r\n"
+                    "Felicidades! Estuvo muy reñido.\r\n\n"
+                    "Tiempo jugador 1: %f.1\r\n"
+                    "Tiempo jugador 2: %f.1\r\n"
+                    "~~ ¿QUEREIS HACER UNA REVANCHA? ~~\r\n\n";
