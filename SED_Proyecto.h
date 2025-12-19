@@ -129,7 +129,7 @@ void SED_RESET_BUZZER(void);
  *																								*
  ************************************************************************************************/
 
-void SED_Temporización(uint16_t tiempo);
+void SED_TemporizaciÃ³n(uint16_t tiempo);
 
 /************************************************************************************************
  * 																								*
@@ -168,10 +168,12 @@ typedef struct{
 
 typedef struct{
 	int8_t ganador;
-	float tiempoJ1;
-	float tiempoJ2;
+	float tiempoJ1[4];
+	float tiempoJ2[4];
 	uint8_t puntosJ1;
 	uint8_t puntosJ2;
+	uint8_t mejorTiempoJ1;
+	uint8_t mejorTiempoJ2;
 } hjugadores;
 /************************************************************************************************
  * 																								*
@@ -186,6 +188,7 @@ void SED_USART_Rondas_Elegidas(uint8_t rondasElegidas);
 void SED_USART_Error_Rondas(void);
 uint8_t SED_USART_Numero_Rondas(char uartBuffer[]);
 void SED_USART_Puestos(void);
+void SED_USART_Winner(hjugadores jugadores);
 hjuego SED_USART_SwitchMenu(hjuego hj);
 
 /************************************************************************************************
@@ -209,17 +212,11 @@ hjuego SED_USART_SwitchMenu(hjuego hj);
  * 										FUNCIONES												*
  *																								*
  ************************************************************************************************/
+hjugadores SED_Comprobaciones(hjugadores jugadores,uint8_t rondas);
 hjugadores SED_Modo_1(uint8_t rondas,hjugadores jugadores);
 hjugadores SED_Modo_2(uint8_t rondas,hjugadores jugadores);
 hjugadores SED_Modo_3(uint8_t rondas,hjugadores jugadores);
 hjugadores SED_Modo_4(uint8_t rondas,hjugadores jugadores);
 
-/************************************************************************************************
- * 																								*
- *										I2C														*
- *																								*
- ************************************************************************************************/
-void  SED_LCD_Bienvenido(void);
-void SED_LCD_Winner(hjugadores jugadores);
 
 #endif /* INC_SED_PROYECTO_H_ */
