@@ -78,8 +78,7 @@ void SED_RESET_A(void){
 
 void SED_Numero_A(uint8_t numero){
 	/*
-	 * @brief: Configura el numero binario que se quiere introducir en el decodificador A
-	 * @param numero: Numero a introducir
+	 * @brief: Imprime el numero introducido en el decodificador A
 	 */
 
 	switch (numero){
@@ -211,8 +210,7 @@ void SED_RESET_B(void){
 
 void SED_Numero_B(uint8_t numero){
 	/*
-	 * @brief: Configura el numero binario que se quiere introducir en el decodificador B
-	 * @param numero: Numero a introducir
+	 * @brief: Imprime el numero introducido en el decodificador B
 	 */
 	switch (numero){
 	case 0:
@@ -358,10 +356,7 @@ void SED_RESET_BUZZER(void){
  ************************************************************************************************/
 
 void SED_Temporización(uint16_t tiempo){
-	/*
-	 * @brief: Configuracion timer4 Tu = 0.1 ms
-	 * @param tiempo: Numero de cuentas
-	 */
+	//Tu = 0.1 ms
 	TIM4->ARR = tiempo;
 	TIM4->CR1 |= (1<<0);
 	while((TIM4->SR & (1<<0)) == 0);
@@ -375,9 +370,6 @@ void SED_Temporización(uint16_t tiempo){
  ************************************************************************************************/
 
 uint32_t SED_ADC_Semilla(void){
-	/*
-	 * @brief: Cambia la semilla de numeros randoms
-	 */
 	extern ADC_HandleTypeDef hadc1;
 
 	uint32_t valor = 0;
@@ -391,53 +383,7 @@ uint32_t SED_ADC_Semilla(void){
 
 	return valor;
 }
-/************************************************************************************************
- * 																								*
- *										FUNCIONES DE I2C										*
- *																								*
- ************************************************************************************************/
 
-void SED_LCD_Bienvenido(void)
-{
-	/*
-	 * @brief: Da la bienvenida al usuario
-	 */
-	lcd_init ();
-	lcd_send_string("***BIENVENIDO***");
-	lcd_put_cur(1, 0);
-	lcd_send_string("***BIENVENIDO***");
-	HAL_Delay(2000);
-
-	lcd_clear ();
-
-	lcd_put_cur(0, 0);
-	lcd_send_string("Pon a prueba");
-
-	lcd_put_cur(1, 0);
-	lcd_send_string("tu reaccion.");
-	HAL_Delay(2000);
-	lcd_clear ();
-}
-
-void SED_LCD_Winner(hjugadores jugadores){
-	/*
-	 * @brief: Muestra por pantalla el ganador
-	 * @param hjugadores jugadores: Datos de los resultados de la partida
-	 */
-	char stringLCD[16];
-	lcd_init ();
-
-	sprintf(stringLCD, "WINNER J%d", jugadores.ganador);
-	lcd_send_string(stringLCD);
-
-	lcd_put_cur(1, 0);
-
-	lcd_send_string("ENHORABUENA");
-
-	HAL_Delay(2000);
-
-	lcd_clear ();
-}
 
 /************************************************************************************************
  * 																								*
@@ -447,9 +393,7 @@ void SED_LCD_Winner(hjugadores jugadores){
  ************************************************************************************************/
 
 void SED_USART_Interface(void){
-	/*
-	 * @brief: Imprime el menu del juego
-	 */
+	//@brief: imprime el menu del juego
 	extern UART_HandleTypeDef huart2;
 
 	const char Menu[] = "Bienvenidos al juego de reaccion!\r\n\n"
@@ -465,10 +409,8 @@ void SED_USART_Interface(void){
 
 int SED_USART_Modos(char uartBuffer[]){
 
-	/*
-	 * @brief: Hace la busqueda del modo que se introdujo USART
-	 * @param uartBuffer: Tiene el contenido que se mandó por la USART
-	 */
+	//@brief: hace la busqueda del modo que se introdujo USART.
+	//@param uartBuffer: tiene el contenido que se mandó por la USART.
 
 	extern hjuego hj;
 	extern UART_HandleTypeDef huart2;
@@ -519,7 +461,7 @@ int SED_USART_Modos(char uartBuffer[]){
 		sprintf(TX_modo, "**** ENTRENAMIENTO ****\r\n\n"
 				"Bienvenido al GYM de la reaccion.\r\n"
 				"Aqui podras mejorar tu tiempo de reaccion visual.\r\n\n"
-				"¿¿TENDRAS MEJORES REFLEJOS QUE EL MISMISIMO FERNANDO ALONSO??\r\n\n");
+				"TENDRAS MEJORES REFLEJOS QUE EL MISMISIMO FERNANDO ALONSO?\r\n\n");
 	}
 	if(y){
 		HAL_UART_Transmit(&huart2, (uint8_t*) TX_Modo, strlen(TX_Modo), 20);
@@ -529,9 +471,8 @@ int SED_USART_Modos(char uartBuffer[]){
 }
 
 void SED_USART_Inicio_Juego(void){
-	/*
-	 * @brief: Interfaz del comienzo del juego
-	 */
+	//@brief: interface del comienzo del juego
+
 	extern UART_HandleTypeDef huart2;
 	char Inicio[24] = "Inicio del juego en:\r\n ";
 
@@ -549,9 +490,7 @@ void SED_USART_Inicio_Juego(void){
 
 
 void SED_USART_Eleccion_Rondas(void){
-	/*
-	 * @brief: Pregunta al usuario cuantas rondas quiere jugar
-	 */
+	//@brief: pregunta al usuario cuantas rondas quiere jugar
 	extern UART_HandleTypeDef huart2;
 
 	const char Rondas[] = "Elige el numero de rondas: \r\n\n"
@@ -564,10 +503,7 @@ void SED_USART_Eleccion_Rondas(void){
 }
 
 uint8_t SED_USART_Numero_Rondas(char uartBuffer[]){
-	/*
-	 * @brief: Hace el control de los valores que entran en la UART
-	 * @param: Tiene el contenido que se mandó por la UART
-	 */ 
+	//@brief: Hace el control de los valores que entran en la uart
 	extern UART_HandleTypeDef huart2;
 
 	uint8_t ref = atoi(uartBuffer);
@@ -578,12 +514,8 @@ uint8_t SED_USART_Numero_Rondas(char uartBuffer[]){
 
 	return refVerificada;
 }
-
 void SED_USART_Rondas_Elegidas(uint8_t rondasElegidas){
-	/*
-	 * @brief: Pregunta al usuario cuantas rondas quiere jugar
-	 * @param: Guarda el valor del numero de rondas elegidas
-	 */
+	//@brief: pregunta al usuario cuantas rondas quiere jugar
 	extern UART_HandleTypeDef huart2;
 
 	char Rondas[32]="";
@@ -591,11 +523,8 @@ void SED_USART_Rondas_Elegidas(uint8_t rondasElegidas){
 
 	HAL_UART_Transmit(&huart2, (uint8_t*) Rondas, strlen(Rondas), 20);
 }
-
 void SED_USART_Error_Rondas(void){
-	/*
-	 * @brief: Error al introducir el numero de rondas
-	 */
+	//@brief: error al introducir el numero de rondas
 	extern UART_HandleTypeDef huart2;
 
 	char error[] = "Introduzca una valor de rondas validos (1 / 3 / 5 / 7).\r\n";
@@ -604,9 +533,7 @@ void SED_USART_Error_Rondas(void){
 }
 
 void SED_USART_Puestos(void){
-	/*
-	 * @brief: Indica a los usuarios como posicionarse para jugar
-	 */
+	//@brief indica al usuario como posicionarse para jugar
 	extern UART_HandleTypeDef huart2;
 
 	const char Puestos[] = "- Jugador 1, dirijase al puesto azul.\r\n\n"
@@ -616,22 +543,17 @@ void SED_USART_Puestos(void){
 }
 
 void SED_USART_Puestos_Modo_4(void){
-	/*
-	 * @brief: Indica al usuario como posicionarse para jugar
-	 */
+	//@brief indica al usuario como posicionarse para jugar
 	extern UART_HandleTypeDef huart2;
 
 	const char Puestos[] = "- Jugador , dirijase al puesto azul.\r\n\n";
 	HAL_UART_Transmit(&huart2, (uint8_t*) Puestos, strlen(Puestos), 20);
 
 }
-
 hjuego SED_USART_SwitchMenu(hjuego hj){
-	/* 
-	 * @brief: Eleccion del modo de juego
-	 * @param hjuego hj: Datos de la seleccion de partida
-	 */
-	hjugadores jugadores = {2,0.0,0.0,0,0}; //ganador, tiempo1,tiempo 2,puntosJ1,puntosJ2
+
+	//@brief eleccion del modo de juego;
+	hjugadores jugadores = {0}; //ganador, tiempo1,tiempo 2,puntosJ1,puntosJ2
 
 	SED_RESET_A();
 	SED_RESET_B();
@@ -641,19 +563,19 @@ hjuego SED_USART_SwitchMenu(hjuego hj){
 	case SED_MODO_1:
 		SED_USART_Puestos();
 		SED_USART_Inicio_Juego();
-		jugadores =SED_Modo_1(hj.rondasElegidas, jugadores);
+		jugadores = SED_Modo_1(hj.rondasElegidas, jugadores);
 		break;
 
 	case SED_MODO_2:
 		SED_USART_Puestos();
 		SED_USART_Inicio_Juego();
-		jugadores =SED_Modo_2(hj.rondasElegidas, jugadores);
+		jugadores = SED_Modo_2(hj.rondasElegidas, jugadores);
 		break;
 
 	case SED_MODO_3:
 		SED_USART_Puestos();
 		SED_USART_Inicio_Juego();
-		jugadores =SED_Modo_3(hj.rondasElegidas, jugadores);
+		jugadores = SED_Modo_3(hj.rondasElegidas, jugadores);
 		break;
 
 	case SED_MODO_4:
@@ -661,14 +583,14 @@ hjuego SED_USART_SwitchMenu(hjuego hj){
 
 		for(int i = 0; i<3;i++){
 			SED_SET_LED_AZUL();
-			SED_Temporización(9999);
+			HAL_Delay(1000);
 			SED_RESET_LED_AZUL();
 		}
 		SED_USART_Inicio_Juego();
 		jugadores = SED_Modo_4(hj.rondasElegidas, jugadores);
 		break;
 	}
-	SED_LCD_Winner(jugadores);
+	SED_USART_Winner(jugadores);
 	SED_USART_Interface();
 
 	hj.modo = SED_POR_DEFECTO;
@@ -678,81 +600,171 @@ hjuego SED_USART_SwitchMenu(hjuego hj){
 	return hj;
 }
 
+void SED_USART_Winner(hjugadores jugadores){
+	extern UART_HandleTypeDef huart2;
+	extern hjuego hj;
+	char string[32];
+
+	sprintf(string, "WINNER J%d \r\n", jugadores.ganador);
+	HAL_UART_Transmit(&huart2, (uint8_t*) string, strlen(string), 30);
+	sprintf(string, "Mejor tiempo J%d: %.0001fs \r\n\n", jugadores.ganador,((jugadores.ganador == 1)? jugadores.tiempoJ1[jugadores.mejorTiempoJ1] : jugadores.tiempoJ2[jugadores.mejorTiempoJ2]));
+	HAL_UART_Transmit(&huart2, (uint8_t*) string, strlen(string), 30);
+
+	if(hj.modo != SED_MODO_4){
+		sprintf(string, "Mejor tiempo J%d: %.0001fs \r\n",((jugadores.ganador == 1)? 2:1),((jugadores.ganador == 1)? jugadores.tiempoJ2[jugadores.mejorTiempoJ2] : jugadores.tiempoJ1[jugadores.mejorTiempoJ1]));
+		HAL_UART_Transmit(&huart2, (uint8_t*) string, strlen(string), 30);
+	}
+
+	HAL_Delay(2000);
+
+}
 
 /************************************************************************************************
  * 																								*
  *										FUNCIONES LOGICAS										*
  *																								*
  ************************************************************************************************/
+hjugadores SED_Comprobaciones(hjugadores jugadores,uint8_t rondas){
+	float comprobacion = jugadores.tiempoJ1[0];
+	float comprobacion2 = jugadores.tiempoJ2[0];
+
+	for(int i = 0; i<rondas; i++){
+		if(comprobacion < jugadores.tiempoJ1[i]){
+			comprobacion = jugadores.tiempoJ1[i];
+			jugadores.mejorTiempoJ1 = i;
+		}
+		if(comprobacion2 < jugadores.tiempoJ2[i]){
+			comprobacion2 = jugadores.tiempoJ2[i];
+			jugadores.mejorTiempoJ2 = i;
+		}
+	}
+	jugadores.ganador = ((jugadores.puntosJ1 > jugadores.puntosJ2) ? 1 : 2);
+
+	return jugadores;
+}
 
 hjugadores SED_Modo_1(uint8_t rondas,hjugadores jugadores){
-	/*
-	 * @brief: Configuracion modo Estimulo Visual
-	 * @param rondas: Numero de rondas
-	 * @param h jugadores jugadores: Datos de los resultados de la partida
-	 */
+	//@brief: Se enciende la luz de forma aleatorio.
+
+
 	uint32_t semilla = SED_ADC_Semilla();
 	srand(semilla);
-	uint32_t tiempoperdedor = 0;
-	uint32_t tiempoganador = 0;
 
 	for(int i = 0; i<rondas ;i++){
+		int y = 1;
+		int x = 1;
 		jugadores.ganador = 0;
 		uint32_t random = rand() % (SED_CCR_MAX - SED_CCR_MIN + 1) + SED_CCR_MIN;
-		TIM3->CCR1 = random;
 
+		TIM3->CNT = 0;
+		TIM3->SR = 0;
+		TIM3->CCR1 = random;
 		TIM3->CR1 |= (1<<0);
 
-		while((TIM3->SR & (1<<1)) == 0); //Esperamos que se encienda la luz
+		while((TIM3->SR & (1<<1)) == 0){
 
-		SED_Temporización(19999);
-		uint32_t tiempo1 =  TIM2->CNT; // Tiempo inicial
-		SED_SET_LED_ROJO();
-
-		TIM2->SR = 0;
-		while(1){
-			// JUGADOR 1
 			if(TIM2->SR & (1<<1)){
-				jugadores.ganador = 1;
-				tiempoganador = TIM2->CCR1;
-				break;
-			}
-
-			// JUGADOR 2
-			if(TIM2->SR & (1<<2)){
 				jugadores.ganador = 2;
-				tiempoganador = TIM2->CCR2;
+				y = 0;
 				break;
 			}
 
-			//TIMEOUT
-			if ((TIM2->CNT - tiempo1) > 50000) {
-				jugadores.ganador = 0;
+			if(TIM2->SR & (1<<2)){
+				jugadores.ganador = 1;
+				y = 0;
 				break;
 			}
 		}
-		TIM2->SR = 0;
 
-		//Buzzer para decir que se pillo la entrada.
-		for(int i = 0; i<2;i++){
-			SED_SET_BUZZER();
+		if(y){
+			HAL_Delay(1000);
+			int capturadoJ1 = 0;
+			int capturadoJ2 = 0;
+			TIM2->SR = 0;
+			TIM2->CNT = 0;
 			SED_SET_LED_ROJO();
-			HAL_Delay(500);
-			SED_RESET_BUZZER();
-			SED_RESET_LED_ROJO();
+
+			while(1){
+
+				if((TIM2->SR & (1<<1)) && !capturadoJ1){
+					jugadores.tiempoJ1[i] = (float)(TIM2->CCR1) * 0.0001;
+					capturadoJ1 = 1;
+				}
+
+				if((TIM2->SR & (1<<2)) && !capturadoJ2){
+					jugadores.tiempoJ2[i] = (float)(TIM2->CCR2) * 0.0001;
+					capturadoJ2 = 1;
+				}
+
+				if(capturadoJ1 && capturadoJ2) break;
+
+				if (TIM2->CNT > 7500) {
+					break;
+				}
+			}
+			TIM2->SR = 0;
+
+
+			//Buzzer para decir que se pillo la entrada.
+			for(int i = 0; i<2;i++){
+				SED_SET_BUZZER();
+				SED_SET_LED_ROJO();
+				HAL_Delay(500);
+				SED_RESET_BUZZER();
+				SED_RESET_LED_ROJO();
+			}
+
+			if (capturadoJ1 && capturadoJ2) jugadores.ganador = (jugadores.tiempoJ1[i] < jugadores.tiempoJ2[i])? 1: 2;
+			else if (capturadoJ1 && !capturadoJ2) jugadores.ganador = 1;
+			else if (!capturadoJ1 && capturadoJ2) jugadores.ganador = 2;
+			else jugadores.ganador = 0;
 		}
+
+		else{
+			jugadores.ganador = (TIM2->SR & (1<<1)) ? 2 : 1;
+			TIM2->SR = 0;
+			for(int j = 0; j<3;j++){
+				SED_SET_BUZZER();
+				SED_SET_LED_ROJO();
+				SED_SET_LED_AZUL();
+				SED_SET_LED_VERDE();
+				HAL_Delay(500);
+				SED_RESET_BUZZER();
+				SED_RESET_LED_ROJO();
+				SED_RESET_LED_AZUL();
+				SED_RESET_LED_VERDE();
+			}
+
+		}
+
+
 		//Atribucion de los puntos y de los tiempos.
+
 		if(jugadores.ganador == 1){
-			jugadores.tiempoJ1 = (float)((tiempoganador - tiempo1)*0.0001f);
-			jugadores.tiempoJ2 = (float)((tiempoperdedor - tiempo1)*0.0001f);
+
 			jugadores.puntosJ1++;
 			SED_SET_LED_AZUL();
+
+			if(x){
+				for(int u = 0; u<3;u++){
+					SED_SET_LED_AZUL();
+					HAL_Delay(500);
+					SED_RESET_LED_AZUL();
+				}
+			}
 		}
 		else if(jugadores.ganador == 2){
-			jugadores.tiempoJ1 = (float)((tiempoperdedor - tiempo1)*0.0001f);
-			jugadores.tiempoJ2 = (float)((tiempoganador - tiempo1)*0.0001f);
+
 			jugadores.puntosJ2++;
 			SED_SET_LED_VERDE();
+
+			if(x){
+				for(int u = 0; u<3;u++){
+					SED_SET_LED_VERDE();
+					HAL_Delay(500);
+					SED_RESET_LED_VERDE();
+				}
+			}
 		}
 
 		HAL_Delay(1000);
@@ -763,83 +775,134 @@ hjugadores SED_Modo_1(uint8_t rondas,hjugadores jugadores){
 		SED_RESET_LED_AZUL();
 		SED_RESET_LED_VERDE();
 
-
-		TIM2->CR1 &= ~(1<<0);
-
-		TIM3->SR &= ~(1<<1);
+		HAL_Delay(1000);
 		TIM3->CR1 &= ~(1<<0);
-		TIM3->CNT = 0;
 	}
+
+
+	jugadores = SED_Comprobaciones(jugadores, rondas);
+
+
 	return jugadores;
 }
+
+
 
 hjugadores SED_Modo_2(uint8_t rondas,hjugadores jugadores){
-	/*
-	 * @brief: Configuracion modo Estimulo Auditivo
-	 * @param rondas: Numero de rondas
-	 * @param h jugadores jugadores: Datos de los resultados de la partida
-	 */
 	uint32_t semilla = SED_ADC_Semilla();
 	srand(semilla);
-	uint32_t tiempoperdedor = 0;
-	uint32_t tiempoganador = 0;
 
 	for(int i = 0; i<rondas ;i++){
+		int y = 1;
+		int x = 1;
 		jugadores.ganador = 0;
 		uint32_t random = rand() % (SED_CCR_MAX - SED_CCR_MIN + 1) + SED_CCR_MIN;
+		TIM3->CNT = 0;
+		TIM3->SR = 0;
 		TIM3->CCR1 = random;
-
 		TIM3->CR1 |= (1<<0);
 
-		while((TIM3->SR & (1<<1)) == 0); //Esperamos que se encienda la luz
+		while((TIM3->SR & (1<<1)) == 0){
 
-		HAL_Delay(1000);
-		uint32_t tiempo1 =  TIM2->CNT; // Tiempo inicial
-		SED_SET_BUZZER();
-
-		TIM2->SR = 0;
-		while(1){
-			// JUGADOR 1
 			if(TIM2->SR & (1<<1)){
-				jugadores.ganador = 1;
-				tiempoganador = TIM2->CCR1;
-				break;
-			}
-
-			// JUGADOR 2
-			if(TIM2->SR & (1<<2)){
 				jugadores.ganador = 2;
-				tiempoganador = TIM2->CCR2;
+				y = 0;
 				break;
 			}
 
-			//TIMEOUT
-			if ((TIM2->CNT - tiempo1) > 50000) {
-				jugadores.ganador = 0;
+			if(TIM2->SR & (1<<2)){
+				jugadores.ganador = 1;
+				y = 0;
 				break;
 			}
 		}
-		SED_RESET_BUZZER();
-		TIM2->SR = 0;
 
-		//Buzzer para decir que se pillo la entrada.
-		for(int i = 0; i<2;i++){
-			SED_SET_LED_ROJO();
-			HAL_Delay(500);
-			SED_RESET_LED_ROJO();
+		if(y){
+			HAL_Delay(1000);
+			int capturadoJ1 = 0;
+			int capturadoJ2 = 0;
+			TIM2->SR = 0;
+			TIM2->CNT = 0;
+			SED_SET_BUZZER();
+
+			while(1){
+
+				if((TIM2->SR & (1<<1)) && !capturadoJ1){
+					jugadores.tiempoJ1[i] = (float)(TIM2->CCR1) * 0.0001;
+					capturadoJ1 = 1;
+				}
+
+				if((TIM2->SR & (1<<2)) && !capturadoJ2){
+					jugadores.tiempoJ2[i] = (float)(TIM2->CCR2) * 0.0001;
+					capturadoJ2 = 1;
+				}
+
+				if(capturadoJ1 && capturadoJ2) break;
+
+				if (TIM2->CNT > 7500) {
+					break;
+				}
+			}
+			SED_RESET_BUZZER();
+			TIM2->SR = 0;
+
+
+			//Buzzer para decir que se pillo la entrada.
+			for(int i = 0; i<2;i++){
+				SED_SET_LED_ROJO();
+				HAL_Delay(1000);
+				SED_RESET_LED_ROJO();
+			}
+
+			if (capturadoJ1 && capturadoJ2) jugadores.ganador = (jugadores.tiempoJ1[i] < jugadores.tiempoJ2[i])? 1: 2;
+			else if (capturadoJ1 && !capturadoJ2) jugadores.ganador = 1;
+			else if (!capturadoJ1 && capturadoJ2) jugadores.ganador = 2;
+			else jugadores.ganador = 0;
 		}
+
+		else{
+			jugadores.ganador = (TIM2->SR & (1<<1)) ? 2 : 1;
+			TIM2->SR = 0;
+			for(int j = 0; j<3;j++){
+				SED_SET_LED_ROJO();
+				SED_SET_LED_AZUL();
+				SED_SET_LED_VERDE();
+				HAL_Delay(500);
+				SED_RESET_LED_ROJO();
+				SED_RESET_LED_AZUL();
+				SED_RESET_LED_VERDE();
+			}
+
+		}
+
+
 		//Atribucion de los puntos y de los tiempos.
+
 		if(jugadores.ganador == 1){
-			jugadores.tiempoJ1 = (float)((tiempoganador - tiempo1)*0.0001f);
-			jugadores.tiempoJ2 = (float)((tiempoperdedor - tiempo1)*0.0001f);
+
 			jugadores.puntosJ1++;
 			SED_SET_LED_AZUL();
+
+			if(x){
+				for(int u = 0; u<3;u++){
+					SED_SET_LED_AZUL();
+					HAL_Delay(500);
+					SED_RESET_LED_AZUL();
+				}
+			}
 		}
 		else if(jugadores.ganador == 2){
-			jugadores.tiempoJ1 = (float)((tiempoperdedor - tiempo1)*0.0001f);
-			jugadores.tiempoJ2 = (float)((tiempoganador - tiempo1)*0.0001f);
+
 			jugadores.puntosJ2++;
 			SED_SET_LED_VERDE();
+
+			if(x){
+				for(int u = 0; u<3;u++){
+					SED_SET_LED_VERDE();
+					HAL_Delay(500);
+					SED_RESET_LED_VERDE();
+				}
+			}
 		}
 
 		HAL_Delay(1000);
@@ -850,22 +913,22 @@ hjugadores SED_Modo_2(uint8_t rondas,hjugadores jugadores){
 		SED_RESET_LED_AZUL();
 		SED_RESET_LED_VERDE();
 
-
-		TIM2->CR1 &= ~(1<<0);
-
-		TIM3->SR &= ~(1<<1);
+		HAL_Delay(1000);
 		TIM3->CR1 &= ~(1<<0);
-		TIM3->CNT = 0;
 	}
+
+
+	jugadores = SED_Comprobaciones(jugadores, rondas);
+
+
 	return jugadores;
 }
 
+
+
+
+
 hjugadores SED_Modo_3(uint8_t rondas,hjugadores jugadores){
-	/*
-	 * @brief: Configuracion modo Nocion del Tiempo
-	 * @param rondas: Numero de rondas
-	 * @param h jugadores jugadores: Datos de los resultados de la partida
-	 */
 	uint32_t semilla = SED_ADC_Semilla();
 	srand(semilla);
 
@@ -878,45 +941,85 @@ hjugadores SED_Modo_3(uint8_t rondas,hjugadores jugadores){
 	for(int i = 0; i<rondas; i++){
 		jugadores.ganador = 0;
 		uint32_t random = rand() % (7 - 3 + 1) + 3;
-
+		int y = 1;
 
 		for(int i = 9; i>random; i--){
 			SED_Numero_A(i);
 			HAL_Delay(1000);
-		}
-		TIM5->CNT = random *10000;
-		TIM5->CR1 |= (1<<0);
 
-
-		int p1,p2 = 0;
-
-		while((TIM5->SR & (1<<0)) == 0){
-			// JUGADOR 1
-			if((TIM2->SR & (1<<1)) && (p1 == 0)){
-				jugadores.tiempoJ1 = TIM2->CCR1;
-				p1 = 1;
+			if(TIM2->SR & (1<<1)){
+				y = 0;
+				break;
 			}
-
-			// JUGADOR 2
-			if((TIM2->SR & (1<<2)) && (p2 == 0)){
-				jugadores.tiempoJ2 = TIM2->CCR2;
-				p2 = 1;
+			if(TIM2->SR & (1<<2)){
+				y = 0;
+				break;
 			}
 		}
 
 
-		SED_SET_BUZZER();
-		HAL_Delay(1000);
-		SED_RESET_BUZZER();
+
+		if(y){
+			TIM5->CNT = (random *10000) - 1;
+			TIM5->CR1 |= (1<<0);
 
 
+			int p1 = 0;
+			int p2 = 0;
+
+			while((TIM5->SR & (1<<0)) == 0){
+				// JUGADOR 1
+				if((TIM2->SR & (1<<1)) && (p1 == 0)){
+					jugadores.tiempoJ1[i] = (float)(TIM2->CCR1) * 0.0001f;
+					p1 = 1;
+				}
+
+				// JUGADOR 2
+				if((TIM2->SR & (1<<2)) && (p2 == 0)){
+					jugadores.tiempoJ2[i] =(float)(TIM2->CCR2) * 0.0001f;
+					p2 = 1;
+				}
+			}
+
+
+			SED_SET_BUZZER();
+			HAL_Delay(1000);
+			SED_RESET_BUZZER();
+
+			if((jugadores.tiempoJ1[i] == 0 ) && (jugadores.tiempoJ2[i] == 0)){
+				jugadores.ganador = 0;
+			}
+			if((jugadores.tiempoJ1[i] == 0)){
+				jugadores.ganador = 2;
+			}
+			else if((jugadores.tiempoJ2[i]==0)){
+				jugadores.ganador = 1;
+
+			}
+			else{
+				jugadores.ganador = (jugadores.tiempoJ1[i] < jugadores.tiempoJ2[i])? 1 : 2;
+			}
+		}
+
+		else{
+			jugadores.ganador = (TIM2->SR & (1<<1)) ? 2 : 1;
+			TIM2->SR = 0;
+			for(int i = 0; i<3;i++){
+				SED_SET_BUZZER();
+				SED_SET_LED_ROJO();
+				HAL_Delay(500);
+				SED_RESET_BUZZER();
+				SED_RESET_LED_ROJO();
+			}
+
+		}
 		//Atribucion de los puntos y de los tiempos.
-		if(jugadores.tiempoJ1 < jugadores.tiempoJ2 ){
+		if(jugadores.ganador == 1 ){
 
 			jugadores.puntosJ1++;
 			SED_SET_LED_AZUL();
 		}
-		else if(jugadores.tiempoJ1 > jugadores.tiempoJ2 ){
+		else if(jugadores.ganador == 2 ){
 
 			jugadores.puntosJ2++;
 			SED_SET_LED_VERDE();
@@ -937,84 +1040,123 @@ hjugadores SED_Modo_3(uint8_t rondas,hjugadores jugadores){
 		TIM5->CNT = 0;
 	}
 
-	jugadores.ganador = jugadores.puntosJ1 > jugadores.puntosJ2 ? 1 : 2;
 
 	TIM2->CR1 &= ~(1<<4);
 	TIM2->ARR = 0xFFFFFFFF;
 	TIM2->EGR |= (1<<0);
 
+	jugadores = SED_Comprobaciones(jugadores, rondas);
+
+
 
 	return jugadores;
 }
 
+
+
+
+
 hjugadores SED_Modo_4(uint8_t rondas,hjugadores jugadores){
-	/*
-	 * @brief: Configuracion modo Entrenamiento
-	 * @param rondas: Numero de rondas
-	 * @param h jugadores jugadores: Datos de los resultados de la partida
-	 */
 	uint32_t semilla = SED_ADC_Semilla();
 	srand(semilla);
-	uint32_t tiempoganador = 0;
 
 	for(int i = 0; i<rondas ;i++){
+
+		int y = 1;
+		int x = 1;
 		jugadores.ganador = 0;
 		uint32_t random = rand() % (SED_CCR_MAX - SED_CCR_MIN + 1) + SED_CCR_MIN;
+		TIM3->CNT = 0;
+		TIM3->SR = 0;
 		TIM3->CCR1 = random;
-
 		TIM3->CR1 |= (1<<0);
 
-		while((TIM3->SR & (1<<1)) == 0); //Esperamos que se encienda la luz
+		while((TIM3->SR & (1<<1)) == 0){
 
-		SED_Temporización(SED_CCR_MIN);
-		uint32_t tiempo1 =  TIM2->CNT; // Tiempo inicial
-		SED_SET_LED_ROJO();
-
-		TIM2->SR = 0;
-		while(1){
-			// JUGADOR 1
 			if(TIM2->SR & (1<<1)){
-				jugadores.ganador = 1;
-				tiempoganador = TIM2->CCR1;
-				break;
-			}
-			//TIMEOUT
-			if ((TIM2->CNT - tiempo1) > 5000) {
 				jugadores.ganador = 0;
+				y = 0;
+				x = 1;
 				break;
 			}
 		}
-		SED_RESET_LED_ROJO();
-		TIM2->SR = 0;
 
-		//Buzzer para decir que se pillo la entrada.
-		for(int i = 0; i<2;i++){
-			SED_SET_BUZZER();
+		if(y){
+			HAL_Delay(1000);
+			int capturadoJ1 = 0;
+			TIM2->SR = 0;
+			TIM2->CNT = 0;
 			SED_SET_LED_ROJO();
-			SED_Temporización(500);
-			SED_RESET_BUZZER();
+
+			while(1){
+
+				if((TIM2->SR & (1<<1)) && !capturadoJ1){
+					jugadores.tiempoJ1[i] = (float)(TIM2->CCR1) * 0.0001;
+					jugadores.ganador = 1;
+					capturadoJ1 = 1;
+					break;
+				}
+			}
 			SED_RESET_LED_ROJO();
+			TIM2->SR = 0;
+			//Buzzer para decir que se pillo la entrada.
+			for(int i = 0; i<2;i++){
+				SED_SET_LED_ROJO();
+				SED_SET_BUZZER();
+				HAL_Delay(1000);
+				SED_RESET_LED_ROJO();
+				SED_RESET_BUZZER();
+			}
 		}
+
+		else{
+			TIM2->SR = 0;
+			for(int j = 0; j<3;j++){
+				SED_SET_LED_ROJO();
+				SED_SET_LED_AZUL();
+				SED_SET_LED_VERDE();
+				SED_SET_BUZZER();
+				HAL_Delay(500);
+				SED_RESET_BUZZER();
+				SED_RESET_LED_ROJO();
+				SED_RESET_LED_AZUL();
+				SED_RESET_LED_VERDE();
+			}
+
+		}
+
+
 		//Atribucion de los puntos y de los tiempos.
+
 		if(jugadores.ganador == 1){
-			jugadores.tiempoJ1 = (float)((tiempoganador - tiempo1)*0.01f);
+
 			jugadores.puntosJ1++;
 			SED_SET_LED_AZUL();
+
+			if(x){
+				for(int u = 0; u<3;u++){
+					SED_SET_LED_AZUL();
+					HAL_Delay(500);
+					SED_RESET_LED_AZUL();
+				}
+			}
 		}
 
-		//Espera de 1s
-		SED_Temporización(20000);
+		HAL_Delay(1000);
 
 		//Imprime el resultado
 		SED_Numero_A(jugadores.puntosJ1);
 		SED_RESET_LED_AZUL();
+		SED_RESET_LED_VERDE();
 
-		TIM2->CR1 &= ~(1<<0);
-
-		TIM3->SR &= ~(1<<1);
+		HAL_Delay(1000);
 		TIM3->CR1 &= ~(1<<0);
-		TIM3->CNT = 0;
 	}
+
+
+	jugadores = SED_Comprobaciones(jugadores, rondas);
+
+
 	return jugadores;
 }
 
