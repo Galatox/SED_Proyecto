@@ -120,7 +120,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart2, (uint8_t*) buffer, 1);
   SED_USART_Interface();
-  SED_LCD_Bienvenido();
 
   HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_2);
   HAL_TIM_IC_Start(&htim2, TIM_CHANNEL_1);
@@ -136,9 +135,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  if(hj.modo == SED_POR_DEFECTO){
-		  SED_LCD_Bienvenido();
-	  }
+
 	  if(hj.print){
 		  hj=SED_USART_SwitchMenu(hj);
 
